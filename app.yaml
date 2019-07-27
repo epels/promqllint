@@ -1,0 +1,7 @@
+main: ./cmd/web
+runtime: go112
+automatic_scaling:
+  max_instances: 2
+handlers:
+  - url: /.*
+    script: auto

@@ -1,0 +1,59 @@
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="assets/codemirror.css">
+		<link rel="icon" href="favicon.ico" />
+		<script src="assets/codemirror.js"></script>
+		<style>
+			.container {
+				margin: 0 auto;
+				max-width: 60%;
+			}
+			.CodeMirror {
+				border: 0.1em solid lightgray;
+				margin-bottom: 1em;
+			}
+		</style>
+		<title>promqllint</title>
+	</head>
+	<body>
+		<div class="container">
+			<h1>promqllint</h1>
+			<p>Validate a promql expression's syntax.</p>
+
+			{{ if .Valid }}
+				<div class="alert alert-success" role="alert">
+					Valid promql expression of type {{ .Type }}!
+				</div>
+			{{ else }}
+				{{ if .ErrorText }}
+					<div class="alert alert-danger" role="alert">
+						The promql expression appears to be invalid: {{ .ErrorText }}.
+					</div>
+				{{ end }}
+			{{ end }}
+
+			<form action="" method="post">
+				<textarea name="body" id="promql-textarea" rows="10">{{.Raw}}</textarea>
+				<button type="submit" class="btn btn-primary">Validate</button>
+			</form>
+
+			<p>promqllint is an open-source project. The source is available on <a href="https://github.com/epels/promqllint">GitHub</a>.</p>
+
+			<script>
+				let promqlTextArea = document.getElementById('promql-textarea');
+				let codeMirror = CodeMirror.fromTextArea(promqlTextArea, {
+					firstLineNumber: 0,
+					lineNumbers: true,
+				});
+				{{ if not .Valid }}
+					codeMirror.markText(
+						{line: {{ .ErrorLine }}, ch: 0},
+						{line: {{ .ErrorLine }}, ch: 9999},
+						{css: "color: red; font-weight: bold;"}
+					);
+				{{ end }}
+			</script>
+		</div>
+	</body>
+</html>
