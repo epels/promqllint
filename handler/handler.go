@@ -30,7 +30,6 @@ func New(p parser, r renderer) (*handler, error) {
 
 func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if proto := r.Header.Get("X-Forwarded-Proto"); proto == "http" {
-		log.Printf("Redirecting to https")
 		r.URL.Host = r.Host
 		r.URL.Scheme = "https"
 		http.Redirect(w, r, r.URL.String(), http.StatusMovedPermanently)
